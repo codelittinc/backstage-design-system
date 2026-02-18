@@ -1,0 +1,104 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Overview/Design Tokens" />
+
+# Design Tokens
+
+The Backstage Design System uses CSS custom properties (design tokens) to ensure visual consistency across all components.
+
+## Color Palette
+
+### Primary — Codelitt Blue
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--primary` | `#0066cc` | Primary actions, links, focus rings |
+| `--primary-dark` | `#004d99` | Hover states, active elements |
+| `--primary-light` | `#3385d6` | Lighter accents |
+| `--primary-50` | `#eff6ff` | Subtle backgrounds |
+| `--primary-100` | `#dbeafe` | Selection highlights |
+
+### Secondary
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--secondary` | `#4a90e2` | Secondary actions |
+| `--accent` | `#00a676` | Accent highlights |
+
+### Semantic Colors
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--success` | `#10b981` | Success states, confirmations |
+| `--warning` | `#f59e0b` | Warning states, caution indicators |
+| `--error` | `#ef4444` | Error states, destructive actions |
+| `--info` | `#3b82f6` | Informational states |
+
+### Neutrals (Slate)
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--gray-50` | `#f8fafc` | Page background |
+| `--gray-100` | `#f1f5f9` | Subtle backgrounds |
+| `--gray-200` | `#e2e8f0` | Borders, dividers |
+| `--gray-300` | `#cbd5e1` | Disabled borders |
+| `--gray-400` | `#94a3b8` | Placeholder text |
+| `--gray-500` | `#64748b` | Secondary text |
+| `--gray-600` | `#475569` | Body text |
+| `--gray-700` | `#334155` | Emphasized text |
+| `--gray-800` | `#1e293b` | Headings |
+| `--gray-900` | `#0f172a` | Primary text |
+
+## Typography
+
+The system uses the **Inter** font family with system font fallbacks:
+
+```
+'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+'Oxygen', 'Ubuntu', 'Cantarell', sans-serif
+```
+
+| Scale | Class | Usage |
+|-------|-------|-------|
+| Extra Small | `text-xs` | Sublabels, metadata |
+| Small | `text-sm` | Body text, form inputs |
+| Base | `text-base` | Default body |
+| Large | `text-lg` | Subheadings |
+| Extra Large | `text-xl` | Section headers |
+
+## Shadows
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--shadow-sm` | `0 1px 2px 0 rgb(0 0 0 / 0.04)` | Buttons, subtle elevation |
+| `--shadow` | `0 1px 3px ...` | Cards, default elevation |
+| `--shadow-md` | `0 4px 6px ...` | Dropdowns, popovers |
+| `--shadow-lg` | `0 10px 15px ...` | Modals, toasts |
+
+## Border Radius
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--radius-sm` | `0.5rem` (8px) | Small elements |
+| `--radius` | `0.75rem` (12px) | Default — inputs, buttons |
+| `--radius-lg` | `1rem` (16px) | Cards, modals |
+| `--radius-xl` | `1.25rem` (20px) | Large containers |
+
+Components use Tailwind classes:
+- `rounded-lg` — tooltips
+- `rounded-xl` — buttons, inputs, alerts, tags
+- `rounded-2xl` — cards, empty states
+- `rounded-full` — status indicators, tag pills
+
+## Spacing
+
+The system follows Tailwind's default spacing scale (4px base unit):
+
+| Class | Value | Common usage |
+|-------|-------|-------------|
+| `p-4` | 16px | Small card padding, alert padding |
+| `p-6` | 24px | Default card padding |
+| `p-12` | 48px | Large card padding, empty states |
+| `gap-1` | 4px | Tight element spacing |
+| `gap-2` | 8px | Default element spacing |
+| `gap-4` | 16px | Section spacing |
