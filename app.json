@@ -1,0 +1,10 @@
+{
+  "name": "backstage-design-system",
+  "description": "Backstage Design System - Reusable UI components for Codelitt internal tools",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "stack": "heroku-24"
+}
