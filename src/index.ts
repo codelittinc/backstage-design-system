@@ -1,6 +1,7 @@
 // Components
 export { default as Button } from "./components/Button";
 export { default as Card } from "./components/Card";
+export { default as DataTable } from "./components/DataTable";
 export { default as EmptyState } from "./components/EmptyState";
 export { default as ErrorAlert } from "./components/ErrorAlert";
 export { default as FormDateInput } from "./components/FormDateInput";
@@ -19,6 +20,7 @@ export { default as Tooltip } from "./components/Tooltip";
 // Types
 export type { ButtonProps } from "./components/Button";
 export type { CardProps } from "./components/Card";
+export type { DataTableProps, DataTableColumn, DataTablePagination } from "./components/DataTable";
 export type { EmptyStateProps } from "./components/EmptyState";
 export type { ErrorAlertProps } from "./components/ErrorAlert";
 export type { FormDateInputProps } from "./components/FormDateInput";
