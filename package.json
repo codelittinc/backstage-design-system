@@ -26,8 +26,8 @@
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
     "prepare": "pnpm build",
-    "start": "serve storybook-static -l tcp://0.0.0.0:$PORT --config serve.json",
-    "heroku-postbuild": "pnpm build-storybook",
+    "start": "serve storybook-static -l tcp://0.0.0.0:$PORT",
+    "heroku-postbuild": "pnpm build-storybook && cp serve.json storybook-static/serve.json",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
