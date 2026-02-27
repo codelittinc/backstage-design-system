@@ -1,13 +1,16 @@
 // Components
+export { default as BarChart } from "./components/BarChart";
 export { default as Button } from "./components/Button";
 export { default as Card } from "./components/Card";
 export { default as DataTable } from "./components/DataTable";
+export { default as DonutChart } from "./components/DonutChart";
 export { default as EmptyState } from "./components/EmptyState";
 export { default as ErrorAlert } from "./components/ErrorAlert";
 export { default as FormDateInput } from "./components/FormDateInput";
 export { default as FormInput } from "./components/FormInput";
 export { default as FormLabel } from "./components/FormLabel";
 export { default as FormSelect } from "./components/FormSelect";
+export { default as LineChart } from "./components/LineChart";
 export { default as LoadingSpinner } from "./components/LoadingSpinner";
 export { default as Pagination } from "./components/Pagination";
 export { default as SearchableSelect } from "./components/SearchableSelect";
@@ -18,15 +21,18 @@ export { ToastContainer, toast } from "./components/Toast";
 export { default as Tooltip } from "./components/Tooltip";
 
 // Types
+export type { BarChartProps, BarChartSeries } from "./components/BarChart";
 export type { ButtonProps } from "./components/Button";
 export type { CardProps } from "./components/Card";
 export type { DataTableProps, DataTableColumn, DataTablePagination } from "./components/DataTable";
+export type { DonutChartProps, DonutChartDataItem } from "./components/DonutChart";
 export type { EmptyStateProps } from "./components/EmptyState";
 export type { ErrorAlertProps } from "./components/ErrorAlert";
 export type { FormDateInputProps } from "./components/FormDateInput";
 export type { FormInputProps } from "./components/FormInput";
 export type { FormLabelProps } from "./components/FormLabel";
 export type { FormSelectProps, FormSelectOption } from "./components/FormSelect";
+export type { LineChartProps, LineChartLine } from "./components/LineChart";
 export type { LoadingSpinnerProps } from "./components/LoadingSpinner";
 export type { PaginationProps } from "./components/Pagination";
 export type { SearchableSelectProps, SearchableSelectOption } from "./components/SearchableSelect";
