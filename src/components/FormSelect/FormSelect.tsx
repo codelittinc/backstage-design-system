@@ -14,6 +14,7 @@ export interface FormSelectProps {
   placeholder?: string;
   disabled?: boolean;
   required?: boolean;
+  clearable?: boolean;
   error?: boolean;
   id?: string;
   className?: string;
@@ -26,6 +27,7 @@ export default function FormSelect({
   placeholder = "Select...",
   disabled = false,
   required = false,
+  clearable = true,
   error = false,
   id,
   className = "",
@@ -179,7 +181,7 @@ export default function FormSelect({
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <div className="flex items-center gap-1">
-          {selectedOption && !required && !disabled && (
+          {selectedOption && clearable && !required && !disabled && (
             <span
               role="button"
               tabIndex={-1}
