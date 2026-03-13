@@ -6,6 +6,7 @@ export { default as DataTable } from "./components/DataTable";
 export { default as DonutChart } from "./components/DonutChart";
 export { default as EmptyState } from "./components/EmptyState";
 export { default as ErrorAlert } from "./components/ErrorAlert";
+export { default as FormCurrencyInput } from "./components/FormCurrencyInput";
 export { default as FormDateInput } from "./components/FormDateInput";
 export { default as FormInput } from "./components/FormInput";
 export { default as FormLabel } from "./components/FormLabel";
@@ -28,6 +29,7 @@ export type { DataTableProps, DataTableColumn, DataTablePagination } from "./com
 export type { DonutChartProps, DonutChartDataItem } from "./components/DonutChart";
 export type { EmptyStateProps } from "./components/EmptyState";
 export type { ErrorAlertProps } from "./components/ErrorAlert";
+export type { FormCurrencyInputProps } from "./components/FormCurrencyInput";
 export type { FormDateInputProps } from "./components/FormDateInput";
 export type { FormInputProps } from "./components/FormInput";
 export type { FormLabelProps } from "./components/FormLabel";
