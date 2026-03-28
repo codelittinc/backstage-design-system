@@ -1,6 +1,6 @@
 {
   "name": "@codelittinc/backstage-design-system",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Backstage Design System - Reusable UI components for Codelitt internal tools",
   "type": "module",
   "main": "./dist/index.js",

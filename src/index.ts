@@ -19,6 +19,7 @@ export { default as SectionHeader } from "./components/SectionHeader";
 export { default as StatusIndicator, StatusLegend } from "./components/StatusIndicator";
 export { default as Tag } from "./components/Tag";
 export { ToastContainer, toast } from "./components/Toast";
+export { default as TimesheetTable, createDefaultApi } from "./components/TimesheetTable";
 export { default as Tooltip } from "./components/Tooltip";
 
 // Types
@@ -42,4 +43,16 @@ export type { SectionHeaderProps } from "./components/SectionHeader";
 export type { StatusIndicatorProps } from "./components/StatusIndicator";
 export type { TagProps } from "./components/Tag";
 export type { ToastType } from "./components/Toast";
+export type {
+  TimesheetTableProps,
+  TimesheetContract,
+  TimesheetEntry,
+  TimesheetApi,
+  TimeEntryResponse,
+  ExpectedHoursResponse,
+  SaveResponse,
+  TimeOff as TimesheetTimeOff,
+  ViewMode as TimesheetViewMode,
+  GridData as TimesheetGridData,
+} from "./components/TimesheetTable";
 export type { TooltipProps } from "./components/Tooltip";
