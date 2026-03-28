@@ -40,6 +40,7 @@ export default function TimesheetTable({
   contracts,
   api: apiOverrides,
   baseUrl = "",
+  apiHeaders,
   defaultView = "weekly",
   onViewChange,
   onNavigate,
@@ -49,7 +50,7 @@ export default function TimesheetTable({
   className = "",
 }: TimesheetTableProps) {
   const api = useMemo<TimesheetApi>(() => {
-    const defaultApi = createDefaultApi(baseUrl);
+    const defaultApi = createDefaultApi(baseUrl, apiHeaders);
     return {
       fetchTimeEntries:
         apiOverrides?.fetchTimeEntries ?? defaultApi.fetchTimeEntries,
@@ -57,7 +58,7 @@ export default function TimesheetTable({
         apiOverrides?.fetchExpectedHours ?? defaultApi.fetchExpectedHours,
       saveTimesheet: apiOverrides?.saveTimesheet ?? defaultApi.saveTimesheet,
     };
-  }, [apiOverrides, baseUrl]);
+  }, [apiOverrides, baseUrl, apiHeaders]);
 
   const [viewMode, setViewMode] = useState<ViewMode>(defaultView);
   const [weekStart, setWeekStart] = useState<Date>(() => {

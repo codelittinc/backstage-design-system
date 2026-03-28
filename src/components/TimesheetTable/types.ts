@@ -67,6 +67,7 @@ export interface TimesheetTableProps {
   contracts: TimesheetContract[];
   api?: Partial<TimesheetApi>;
   baseUrl?: string;
+  apiHeaders?: Record<string, string>;
   defaultView?: ViewMode;
   onViewChange?: (view: ViewMode) => void;
   onNavigate?: (params: Record<string, string>) => void;

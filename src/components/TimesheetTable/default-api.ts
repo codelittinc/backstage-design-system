@@ -6,7 +6,15 @@ import type {
   TimesheetEntry,
 } from "./types";
 
-export function createDefaultApi(baseUrl: string = ""): TimesheetApi {
+export function createDefaultApi(
+  baseUrl: string = "",
+  extraHeaders: Record<string, string> = {}
+): TimesheetApi {
+  const headers = (contentType?: string): Record<string, string> => ({
+    ...extraHeaders,
+    ...(contentType ? { "Content-Type": contentType } : {}),
+  });
+
   return {
     async fetchTimeEntries(params): Promise<TimeEntryResponse> {
       const searchParams = new URLSearchParams({
@@ -14,7 +22,8 @@ export function createDefaultApi(baseUrl: string = ""): TimesheetApi {
         endDate: params.endDate,
       });
       const res = await fetch(
-        `${baseUrl}/api/my-timesheets/entries?${searchParams}`
+        `${baseUrl}/api/my-timesheets/entries?${searchParams}`,
+        { headers: headers() }
       );
       if (!res.ok) throw new Error("Failed to fetch time entries");
       return res.json();
@@ -26,7 +35,8 @@ export function createDefaultApi(baseUrl: string = ""): TimesheetApi {
         endDate: params.endDate,
       });
       const res = await fetch(
-        `${baseUrl}/api/my-timesheets/expected-hours?${searchParams}`
+        `${baseUrl}/api/my-timesheets/expected-hours?${searchParams}`,
+        { headers: headers() }
       );
       if (!res.ok) throw new Error("Failed to fetch expected hours");
       return res.json();
@@ -35,7 +45,7 @@ export function createDefaultApi(baseUrl: string = ""): TimesheetApi {
     async saveTimesheet(entries: TimesheetEntry[]): Promise<SaveResponse> {
       const res = await fetch(`${baseUrl}/api/my-timesheets/save`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: headers("application/json"),
         body: JSON.stringify({ entries }),
       });
       if (!res.ok) {
