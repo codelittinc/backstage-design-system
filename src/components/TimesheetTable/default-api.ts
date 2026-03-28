@@ -10,13 +10,11 @@ export function createDefaultApi(baseUrl: string = ""): TimesheetApi {
   return {
     async fetchTimeEntries(params): Promise<TimeEntryResponse> {
       const searchParams = new URLSearchParams({
-        userId: params.userId.toString(),
         startDate: params.startDate,
         endDate: params.endDate,
-        limit: "200",
       });
       const res = await fetch(
-        `${baseUrl}/api/time-entries?${searchParams}`
+        `${baseUrl}/api/my-timesheets/entries?${searchParams}`
       );
       if (!res.ok) throw new Error("Failed to fetch time entries");
       return res.json();
