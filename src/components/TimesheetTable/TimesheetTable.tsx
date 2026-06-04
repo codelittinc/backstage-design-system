@@ -85,6 +85,12 @@ export default function TimesheetTable({
   const [timeOffs, setTimeOffs] = useState<TimeOff[]>([]);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
+  const AUTOSAVE_DELAY_MS = 15000;
+  const REVERT_WINDOW_MS = 5000;
+  const [revertSnapshot, setRevertSnapshot] = useState<GridData | null>(null);
+  const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const revertHideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const weekDates = Array.from({ length: 7 }, (_, i) =>
     toISODate(addDays(weekStart, i))
   );
@@ -143,6 +149,15 @@ export default function TimesheetTable({
       setExpectedHours(expectedRes.expectedHours);
       setPtoHours(expectedRes.ptoHours);
       setTimeOffs(expectedRes.timeOffs || []);
+      setRevertSnapshot(null);
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+        autoSaveTimerRef.current = null;
+      }
+      if (revertHideTimerRef.current) {
+        clearTimeout(revertHideTimerRef.current);
+        revertHideTimerRef.current = null;
+      }
     } catch (error) {
       console.error("Error fetching time entries:", error);
       toast.error("Failed to load time entries");
@@ -198,43 +213,126 @@ export default function TimesheetTable({
     }
   };
 
-  const handleSave = async () => {
-    setSaving(true);
-    try {
+  const persistDiff = useCallback(
+    async (snapshotBefore: GridData, gridNow: GridData): Promise<boolean> => {
       const changedEntries: TimesheetEntry[] = [];
       const allKeys = new Set([
-        ...Object.keys(gridData),
-        ...Object.keys(originalData),
+        ...Object.keys(gridNow),
+        ...Object.keys(snapshotBefore),
       ]);
-
       for (const key of allKeys) {
-        const currentVal = gridData[key] ?? null;
-        const originalVal = originalData[key] ?? null;
-
+        const currentVal = gridNow[key] ?? null;
+        const originalVal = snapshotBefore[key] ?? null;
         if (currentVal !== originalVal) {
           const { contractId, date } = parseCellKey(key);
           changedEntries.push({ contractId, date, hours: currentVal });
         }
       }
-
-      if (changedEntries.length === 0) {
-        toast.info("No changes to save");
-        setSaving(false);
-        return;
-      }
-
+      if (changedEntries.length === 0) return false;
       await api.saveTimesheet(changedEntries);
-      setOriginalData({ ...gridData });
-      toast.success("Timesheet saved successfully");
+      return true;
+    },
+    [api]
+  );
+
+  const performAutoSave = useCallback(async () => {
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+      autoSaveTimerRef.current = null;
+    }
+    const snapshotBefore = originalData;
+    const gridNow = gridData;
+    if (JSON.stringify(gridNow) === JSON.stringify(snapshotBefore)) return;
+    setSaving(true);
+    try {
+      const saved = await persistDiff(snapshotBefore, gridNow);
+      if (!saved) return;
+      setOriginalData({ ...gridNow });
+      setRevertSnapshot(snapshotBefore);
+      if (revertHideTimerRef.current) clearTimeout(revertHideTimerRef.current);
+      revertHideTimerRef.current = setTimeout(() => {
+        setRevertSnapshot(null);
+        revertHideTimerRef.current = null;
+      }, REVERT_WINDOW_MS);
     } catch (error: unknown) {
-      console.error("Error saving timesheet:", error);
+      console.error("Error auto-saving timesheet:", error);
       const message =
         error instanceof Error ? error.message : "Failed to save timesheet";
       toast.error(message);
     } finally {
       setSaving(false);
     }
-  };
+  }, [originalData, gridData, persistDiff]);
+
+  const flushPendingAutoSave = useCallback(async () => {
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+      autoSaveTimerRef.current = null;
+    }
+    if (isDirty) {
+      await performAutoSave();
+    }
+  }, [isDirty, performAutoSave]);
+
+  const handleRevert = useCallback(async () => {
+    if (!revertSnapshot) return;
+    const snapshot = revertSnapshot;
+    setRevertSnapshot(null);
+    if (revertHideTimerRef.current) {
+      clearTimeout(revertHideTimerRef.current);
+      revertHideTimerRef.current = null;
+    }
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+      autoSaveTimerRef.current = null;
+    }
+    const currentSaved = originalData;
+    setGridData(snapshot);
+    setOriginalData(snapshot);
+    setSaving(true);
+    try {
+      await persistDiff(currentSaved, snapshot);
+    } catch (error: unknown) {
+      console.error("Error reverting timesheet:", error);
+      const message =
+        error instanceof Error ? error.message : "Failed to revert changes";
+      toast.error(message);
+    } finally {
+      setSaving(false);
+    }
+  }, [revertSnapshot, originalData, persistDiff]);
+
+  // Debounced auto-save: reschedule the 5s timer on every edit. Hide the
+  // revert UI as soon as the user starts editing again.
+  useEffect(() => {
+    if (!isDirty || loading || saving) return;
+    if (revertSnapshot) {
+      setRevertSnapshot(null);
+      if (revertHideTimerRef.current) {
+        clearTimeout(revertHideTimerRef.current);
+        revertHideTimerRef.current = null;
+      }
+    }
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    autoSaveTimerRef.current = setTimeout(() => {
+      autoSaveTimerRef.current = null;
+      performAutoSave();
+    }, AUTOSAVE_DELAY_MS);
+    return () => {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+        autoSaveTimerRef.current = null;
+      }
+    };
+  }, [gridData, isDirty, loading, saving, performAutoSave, revertSnapshot]);
+
+  // Cleanup pending timers on unmount.
+  useEffect(() => {
+    return () => {
+      if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+      if (revertHideTimerRef.current) clearTimeout(revertHideTimerRef.current);
+    };
+  }, []);
 
   const getRowTotal = (contractId: number): number => {
     return weekDates.reduce((sum, date) => {
@@ -266,44 +364,44 @@ export default function TimesheetTable({
     }, 0);
   };
 
-  const goToPrevWeek = () => {
-    if (isDirty && !confirm("You have unsaved changes. Discard them?")) return;
+  const goToPrevWeek = async () => {
+    await flushPendingAutoSave();
     setWeekStart((prev) => addDays(prev, -7));
   };
-  const goToNextWeek = () => {
-    if (isDirty && !confirm("You have unsaved changes. Discard them?")) return;
+  const goToNextWeek = async () => {
+    await flushPendingAutoSave();
     setWeekStart((prev) => addDays(prev, 7));
   };
-  const goToToday = () => {
-    if (isDirty && !confirm("You have unsaved changes. Discard them?")) return;
+  const goToToday = async () => {
+    await flushPendingAutoSave();
     setWeekStart(getMonday(new Date()));
   };
 
-  const goToPrevMonth = () => {
-    if (isDirty && !confirm("You have unsaved changes. Discard them?")) return;
+  const goToPrevMonth = async () => {
+    await flushPendingAutoSave();
     setSelectedDay(null);
     setMonthDate(
       (prev) =>
         new Date(Date.UTC(prev.getUTCFullYear(), prev.getUTCMonth() - 1, 1))
     );
   };
-  const goToNextMonth = () => {
-    if (isDirty && !confirm("You have unsaved changes. Discard them?")) return;
+  const goToNextMonth = async () => {
+    await flushPendingAutoSave();
     setSelectedDay(null);
     setMonthDate(
       (prev) =>
         new Date(Date.UTC(prev.getUTCFullYear(), prev.getUTCMonth() + 1, 1))
     );
   };
-  const goToCurrentMonth = () => {
-    if (isDirty && !confirm("You have unsaved changes. Discard them?")) return;
+  const goToCurrentMonth = async () => {
+    await flushPendingAutoSave();
     setSelectedDay(null);
     setMonthDate(getFirstOfMonth(new Date()));
   };
 
-  const handleViewModeChange = (mode: ViewMode) => {
+  const handleViewModeChange = async (mode: ViewMode) => {
     if (mode === viewMode) return;
-    if (isDirty && !confirm("You have unsaved changes. Discard them?")) return;
+    await flushPendingAutoSave();
     if (mode === "monthly") {
       setMonthDate(getFirstOfMonth(weekStart));
       setSelectedDay(null);
@@ -365,14 +463,24 @@ export default function TimesheetTable({
         </div>
         <div className="flex items-center gap-3">
           <ViewToggle viewMode={viewMode} onChange={handleViewModeChange} />
-          {isDirty && (
-            <span className="text-sm text-amber-600 font-medium">
-              Unsaved changes
-            </span>
-          )}
-          <Button onClick={handleSave} disabled={saving || !isDirty}>
-            {saving ? "Saving..." : "Save"}
-          </Button>
+          {revertSnapshot && !isDirty && !saving ? (
+            <>
+              <span className="text-sm text-emerald-700 font-medium">
+                Saved
+              </span>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleRevert}
+              >
+                Revert
+              </Button>
+            </>
+          ) : (isDirty || saving) ? (
+            <Button onClick={performAutoSave} disabled={saving || !isDirty}>
+              {saving ? "Saving..." : "Save"}
+            </Button>
+          ) : null}
         </div>
       </div>
 
