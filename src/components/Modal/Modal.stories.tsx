@@ -1,15 +1,40 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { useState } from "react";
-import Modal from "./Modal";
+import Modal, { type ModalProps } from "./Modal";
 import Button from "../Button";
 import FormInput from "../FormInput";
 import FormLabel from "../FormLabel";
+
+function ModalDemo({
+  triggerLabel = "Open modal",
+  footerRenderer,
+  ...modalProps
+}: Omit<ModalProps, "onClose"> & {
+  triggerLabel?: string;
+  footerRenderer?: (close: () => void) => React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>{triggerLabel}</Button>
+      {open && (
+        <Modal
+          {...modalProps}
+          onClose={close}
+          footer={footerRenderer ? footerRenderer(close) : modalProps.footer}
+        />
+      )}
+    </>
+  );
+}
 
 const meta = {
   title: "Components/Modal",
   component: Modal,
   tags: ["autodocs"],
+  render: (args) => <ModalDemo {...args} />,
   args: {
     onClose: fn(),
     title: "Modal title",
@@ -53,43 +78,41 @@ export const WithFooter: Story = {
   args: {
     title: "Save changes?",
     children: "Your changes will be applied immediately.",
-    footer: (
-      <>
-        <Button variant="secondary" onClick={fn()}>
-          Cancel
-        </Button>
-        <Button onClick={fn()}>Save</Button>
-      </>
-    ),
   },
+  render: (args) => (
+    <ModalDemo
+      {...args}
+      footerRenderer={(close) => (
+        <>
+          <Button variant="secondary" onClick={close}>
+            Cancel
+          </Button>
+          <Button onClick={close}>Save</Button>
+        </>
+      )}
+    />
+  ),
 } satisfies Story;
 
-export const Interactive: Story = {
-  render: () => {
-    const Demo = () => {
-      const [open, setOpen] = useState(false);
-      return (
-        <>
-          <Button onClick={() => setOpen(true)}>Open modal</Button>
-          {open && (
-            <Modal
-              onClose={() => setOpen(false)}
-              title="Interactive modal"
-              footer={
-                <>
-                  <Button variant="secondary" onClick={() => setOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={() => setOpen(false)}>Confirm</Button>
-                </>
-              }
-            >
-              Press Escape or click the backdrop to close.
-            </Modal>
-          )}
-        </>
-      );
-    };
-    return <Demo />;
+export const NoBackdropDismiss: Story = {
+  args: {
+    title: "Important action",
+    children:
+      "This modal can only be closed via the footer buttons — clicking the backdrop or pressing Escape will not dismiss it.",
+    closeOnBackdropClick: false,
+    closeOnEscape: false,
   },
+  render: (args) => (
+    <ModalDemo
+      {...args}
+      footerRenderer={(close) => (
+        <>
+          <Button variant="secondary" onClick={close}>
+            Cancel
+          </Button>
+          <Button onClick={close}>Continue</Button>
+        </>
+      )}
+    />
+  ),
 } satisfies Story;
