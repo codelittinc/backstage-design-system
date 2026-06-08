@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { ReactNode, useState, useRef, useEffect, useCallback } from 'react';
 
 export interface SearchableSelectOption {
   value: string;
@@ -20,6 +20,9 @@ export interface SearchableSelectProps {
   placeholder?: string;
   error?: string | null;
   minChars?: number;
+  onCreate?: (input: string) => void | Promise<void>;
+  createLabel?: (input: string) => ReactNode;
+  emptyMessage?: ReactNode;
 }
 
 export default function SearchableSelect({
@@ -32,7 +35,10 @@ export default function SearchableSelect({
   loading = false,
   placeholder = 'Search...',
   error = null,
-  minChars = 2,
+  minChars = 0,
+  onCreate,
+  createLabel,
+  emptyMessage,
 }: SearchableSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -49,6 +55,13 @@ export default function SearchableSelect({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const trimmedSearch = searchValue.trim();
+  const hasExactMatch = options.some(
+    (o) => o.label.toLowerCase() === trimmedSearch.toLowerCase()
+  );
+  const showCreateOption = !!onCreate && trimmedSearch.length > 0 && !hasExactMatch;
+  const navigableCount = options.length + (showCreateOption ? 1 : 0);
+
   const handleSelect = useCallback(
     (option: SearchableSelectOption) => {
       onSelect(option);
@@ -57,6 +70,13 @@ export default function SearchableSelect({
     },
     [onSelect]
   );
+
+  const handleCreate = useCallback(async () => {
+    if (!onCreate || !trimmedSearch) return;
+    await onCreate(trimmedSearch);
+    setIsOpen(false);
+    setHighlightedIndex(-1);
+  }, [onCreate, trimmedSearch]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -72,7 +92,7 @@ export default function SearchableSelect({
         case 'ArrowDown':
           e.preventDefault();
           setHighlightedIndex((prev) =>
-            prev < options.length - 1 ? prev + 1 : prev
+            prev < navigableCount - 1 ? prev + 1 : prev
           );
           break;
         case 'ArrowUp':
@@ -83,6 +103,8 @@ export default function SearchableSelect({
           e.preventDefault();
           if (highlightedIndex >= 0 && highlightedIndex < options.length) {
             handleSelect(options[highlightedIndex]);
+          } else if (showCreateOption && highlightedIndex === options.length) {
+            handleCreate();
           }
           break;
         case 'Escape':
@@ -90,7 +112,15 @@ export default function SearchableSelect({
           break;
       }
     },
-    [isOpen, options, highlightedIndex, handleSelect]
+    [
+      isOpen,
+      navigableCount,
+      options,
+      highlightedIndex,
+      handleSelect,
+      handleCreate,
+      showCreateOption,
+    ]
   );
 
   const handleClear = () => {
@@ -99,13 +129,8 @@ export default function SearchableSelect({
     inputRef.current?.focus();
   };
 
-  const showDropdown =
-    isOpen &&
-    (loading ||
-      error ||
-      options.length > 0 ||
-      (searchValue.length > 0 && searchValue.length < minChars) ||
-      (searchValue.length >= minChars && !loading && options.length === 0));
+  const belowMinChars = searchValue.length > 0 && searchValue.length < minChars;
+  const showDropdown = isOpen;
 
   if (selectedOption) {
     return (
@@ -179,9 +204,8 @@ export default function SearchableSelect({
             setHighlightedIndex(-1);
             setIsOpen(true);
           }}
-          onFocus={() => {
-            if (searchValue.length > 0) setIsOpen(true);
-          }}
+          onFocus={() => setIsOpen(true)}
+          onClick={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="w-full rounded-xl border border-slate-200 bg-white pl-10 pr-10 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-[#0066cc] focus:outline-none focus:ring-2 focus:ring-[#0066cc]/20"
@@ -210,9 +234,9 @@ export default function SearchableSelect({
           id="searchable-select-listbox"
           role="listbox"
           aria-label="Search results"
-          className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-lg"
+          className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-b-xl border border-slate-200 bg-white shadow-lg"
         >
-          {searchValue.length > 0 && searchValue.length < minChars && (
+          {belowMinChars && (
             <li className="px-4 py-4 text-center text-sm text-slate-400">
               Type at least {minChars} characters to search...
             </li>
@@ -238,20 +262,30 @@ export default function SearchableSelect({
 
           {!loading &&
             !error &&
-            searchValue.length >= minChars &&
-            options.length === 0 && (
+            !belowMinChars &&
+            options.length === 0 &&
+            !showCreateOption && (
               <li className="px-4 py-6 text-center">
-                <p className="text-sm text-slate-500">
-                  No results found for &ldquo;{searchValue}&rdquo;
-                </p>
-                <p className="mt-1 text-xs text-slate-400">
-                  Try a different search term.
-                </p>
+                {emptyMessage ? (
+                  <p className="text-sm text-slate-500">{emptyMessage}</p>
+                ) : searchValue.length === 0 ? (
+                  <p className="text-sm text-slate-500">Start typing to search...</p>
+                ) : (
+                  <>
+                    <p className="text-sm text-slate-500">
+                      No results found for &ldquo;{searchValue}&rdquo;
+                    </p>
+                    <p className="mt-1 text-xs text-slate-400">
+                      Try a different search term.
+                    </p>
+                  </>
+                )}
               </li>
             )}
 
           {!loading &&
             !error &&
+            !belowMinChars &&
             options.map((option, index) => (
               <li
                 key={option.value}
@@ -273,6 +307,25 @@ export default function SearchableSelect({
                 )}
               </li>
             ))}
+
+          {!loading && !error && !belowMinChars && showCreateOption && (
+            <li
+              role="option"
+              aria-selected={highlightedIndex === options.length}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                handleCreate();
+              }}
+              onMouseEnter={() => setHighlightedIndex(options.length)}
+              className={`flex cursor-pointer items-center gap-2 border-t border-slate-100 px-4 py-3 text-sm text-[#0066cc] ${
+                highlightedIndex === options.length ? 'bg-[#0066cc]/5' : ''
+              }`}
+            >
+              <span className="font-medium">
+                {createLabel ? createLabel(trimmedSearch) : `+ Create "${trimmedSearch}"`}
+              </span>
+            </li>
+          )}
         </ul>
       )}
     </div>
