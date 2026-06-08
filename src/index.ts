@@ -22,6 +22,7 @@ export { default as Pagination } from "./components/Pagination";
 export { default as SearchableSelect } from "./components/SearchableSelect";
 export { default as SectionHeader } from "./components/SectionHeader";
 export { default as StatusIndicator, StatusLegend } from "./components/StatusIndicator";
+export { default as Tabs } from "./components/Tabs";
 export { default as Tag } from "./components/Tag";
 export { ToastContainer, toast } from "./components/Toast";
 export { default as TimesheetTable, createDefaultApi } from "./components/TimesheetTable";
@@ -51,6 +52,7 @@ export type { PaginationProps } from "./components/Pagination";
 export type { SearchableSelectProps, SearchableSelectOption } from "./components/SearchableSelect";
 export type { SectionHeaderProps } from "./components/SectionHeader";
 export type { StatusIndicatorProps } from "./components/StatusIndicator";
+export type { TabsProps, TabItem } from "./components/Tabs";
 export type { TagProps } from "./components/Tag";
 export type { ToastType } from "./components/Toast";
 export type {
