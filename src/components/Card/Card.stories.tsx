@@ -52,6 +52,37 @@ export const LargePadding: Story = {
   },
 };
 
+export const Hoverable: Story = {
+  args: {
+    hoverable: true,
+    children: "Hover me — note the shadow lift and border darken.",
+  },
+};
+
+export const AsLink: Story = {
+  args: {
+    children: "This card renders as a real <a> tag (works with router links too).",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "When `asChild` is set, Card merges its styles into the single child element instead of wrapping in a `<div>`. The child element controls semantics (href, onClick, etc.).",
+      },
+    },
+  },
+  render: (args) => (
+    <Card {...args} asChild hoverable>
+      <a href="#example" className="group block no-underline">
+        <h3 className="mb-2 text-lg font-semibold text-slate-900 group-hover:text-[#0066cc]">
+          Customers
+        </h3>
+        <p className="text-sm text-slate-500">Manage customers and contacts</p>
+      </a>
+    </Card>
+  ),
+};
+
 export const Gallery: Story = {
   args: {
     children: "Gallery",
