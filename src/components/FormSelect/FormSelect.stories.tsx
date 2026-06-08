@@ -71,10 +71,10 @@ export const Required: Story = {
   },
 } satisfies Story;
 
-export const WithSearch: Story = {
+export const ManyOptions: Story = {
   args: {
     options: manyOptions,
-    placeholder: "Select a framework (with search)...",
+    placeholder: "Select a framework (click to open, type to filter)...",
   },
 } satisfies Story;
 
