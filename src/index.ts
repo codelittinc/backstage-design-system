@@ -2,6 +2,7 @@
 export { default as BarChart } from "./components/BarChart";
 export { default as Button } from "./components/Button";
 export { default as Card } from "./components/Card";
+export { default as Checkbox } from "./components/Checkbox";
 export { default as CheckboxGroup } from "./components/CheckboxGroup";
 export { default as DataTable } from "./components/DataTable";
 export { default as DonutChart } from "./components/DonutChart";
@@ -29,6 +30,7 @@ export { default as Tooltip } from "./components/Tooltip";
 export type { BarChartProps, BarChartSeries } from "./components/BarChart";
 export type { ButtonProps } from "./components/Button";
 export type { CardProps } from "./components/Card";
+export type { CheckboxProps } from "./components/Checkbox";
 export type { CheckboxGroupProps, CheckboxGroupOption } from "./components/CheckboxGroup";
 export type { DataTableProps, DataTableColumn, DataTablePagination } from "./components/DataTable";
 export type { DonutChartProps, DonutChartDataItem } from "./components/DonutChart";
