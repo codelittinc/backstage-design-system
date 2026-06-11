@@ -29,7 +29,11 @@ export { default as TimesheetTable, createDefaultApi } from "./components/Timesh
 export { default as Tooltip } from "./components/Tooltip";
 
 // Types
-export type { BarChartProps, BarChartSeries } from "./components/BarChart";
+export type {
+  BarChartProps,
+  BarChartSeries,
+  BarChartReferenceLine,
+} from "./components/BarChart";
 export type { ButtonProps } from "./components/Button";
 export type { CardProps } from "./components/Card";
 export type { CheckboxProps } from "./components/Checkbox";

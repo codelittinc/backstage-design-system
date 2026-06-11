@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
   LabelList,
+  ReferenceLine,
 } from "recharts";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -49,6 +50,17 @@ export interface BarChartSeries {
   radius?: [number, number, number, number];
 }
 
+export interface BarChartReferenceLine {
+  /** Value on the value axis where the line is drawn (Y for vertical bars, X for horizontal bars). */
+  value: number;
+  /** Optional label rendered alongside the line. */
+  label?: string;
+  /** Line color. Defaults to red (#ef4444). */
+  color?: string;
+  /** Dash pattern. Defaults to "4 4". Pass "0" for a solid line. */
+  strokeDasharray?: string;
+}
+
 export interface BarChartProps {
   /** Array of data objects. Each object should have a category key and numeric value keys matching series dataKeys. Extra fields are passed through to tooltips. */
   data: Record<string, unknown>[];
@@ -81,6 +93,8 @@ export interface BarChartProps {
   }) => ReactNode | null;
   /** Category axis width (for vertical/horizontal bar layout). Defaults to 140 for vertical layout. */
   categoryAxisWidth?: number;
+  /** Reference lines drawn on the value axis, e.g. a threshold/limit marker. */
+  referenceLines?: BarChartReferenceLine[];
   /** Additional CSS class name for the wrapper div. */
   className?: string;
 }
@@ -99,6 +113,7 @@ export default function BarChart({
   tooltipFormatter,
   tooltipContent,
   categoryAxisWidth,
+  referenceLines = [],
   className = "",
 }: BarChartProps) {
   const isVerticalLayout = layout === "vertical";
@@ -207,6 +222,30 @@ export default function BarChart({
                 <LabelList dataKey={s.dataKey} content={renderInsideLabel} />
               )}
             </Bar>
+          ))}
+
+          {referenceLines.map((line, i) => (
+            <ReferenceLine
+              key={`ref-${i}`}
+              {...(isVerticalLayout
+                ? { x: line.value }
+                : { y: line.value })}
+              stroke={line.color ?? "#ef4444"}
+              strokeDasharray={line.strokeDasharray ?? "4 4"}
+              strokeWidth={1.5}
+              ifOverflow="extendDomain"
+              label={
+                line.label
+                  ? {
+                      value: line.label,
+                      position: isVerticalLayout ? "top" : "right",
+                      fill: line.color ?? "#ef4444",
+                      fontSize: 11,
+                      fontWeight: 600,
+                    }
+                  : undefined
+              }
+            />
           ))}
         </RechartsBarChart>
       </ResponsiveContainer>
