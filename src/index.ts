@@ -17,16 +17,30 @@ export { default as FormTextarea } from "./components/FormTextarea";
 export { default as LineChart } from "./components/LineChart";
 export { default as LoadingSpinner } from "./components/LoadingSpinner";
 export { default as Modal } from "./components/Modal";
+export { default as MonthCalendar } from "./components/MonthCalendar";
 export { default as MultiSelect } from "./components/MultiSelect";
 export { default as Pagination } from "./components/Pagination";
+export { default as Popover } from "./components/Popover";
 export { default as SearchableSelect } from "./components/SearchableSelect";
 export { default as SectionHeader } from "./components/SectionHeader";
+export { default as SegmentedChip } from "./components/SegmentedChip";
 export { default as StatusIndicator, StatusLegend } from "./components/StatusIndicator";
 export { default as Tabs } from "./components/Tabs";
 export { default as Tag } from "./components/Tag";
 export { ToastContainer, toast } from "./components/Toast";
 export { default as TimesheetTable, createDefaultApi } from "./components/TimesheetTable";
 export { default as Tooltip } from "./components/Tooltip";
+
+// Tokens
+export {
+  CATEGORICAL_PALETTE,
+  MAX_CHIP_SEGMENTS,
+  NEUTRAL_CATEGORICAL_COLOR,
+  OVERFLOW_SEGMENT_COLOR,
+  getCategoricalColor,
+  getCategoricalSegments,
+} from "./tokens/categoricalColors";
+export type { CategoricalSegment } from "./tokens/categoricalColors";
 
 // Types
 export type {
@@ -51,10 +65,13 @@ export type { FormTextareaProps } from "./components/FormTextarea";
 export type { LineChartProps, LineChartLine } from "./components/LineChart";
 export type { LoadingSpinnerProps } from "./components/LoadingSpinner";
 export type { ModalProps, ModalSize } from "./components/Modal";
+export type { MonthCalendarProps } from "./components/MonthCalendar";
 export type { MultiSelectProps, MultiSelectOption } from "./components/MultiSelect";
 export type { PaginationProps } from "./components/Pagination";
+export type { PopoverProps, PopoverTriggerProps } from "./components/Popover";
 export type { SearchableSelectProps, SearchableSelectOption } from "./components/SearchableSelect";
 export type { SectionHeaderProps } from "./components/SectionHeader";
+export type { SegmentedChipProps, SegmentedChipSegment } from "./components/SegmentedChip";
 export type { StatusIndicatorProps } from "./components/StatusIndicator";
 export type { TabsProps, TabItem } from "./components/Tabs";
 export type { TagProps } from "./components/Tag";
