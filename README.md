@@ -19,6 +19,7 @@ Open [http://localhost:6006](http://localhost:6006) to browse components.
 | **Form** | FormInput, FormLabel, FormSelect, SearchableSelect |
 | **Feedback** | Toast, ErrorAlert, LoadingSpinner, EmptyState, Tooltip |
 | **Data Display** | StatusIndicator, Pagination |
+| **Overlays** | Modal, Popover, Tooltip, CommandPalette |
 
 ## Tech Stack
 
