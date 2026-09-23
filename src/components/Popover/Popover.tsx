@@ -239,7 +239,7 @@ export default function Popover({
             style={popoverStyle(state.anchor)}
             onMouseEnter={cancelHoverClose}
             onMouseLeave={scheduleHoverClose}
-            className={`z-50 w-64 rounded-lg border border-slate-200 bg-white p-3 shadow-lg text-left ${className}`}
+            className={`z-50 w-64 max-w-[calc(100vw-1rem)] rounded-lg border border-slate-200 bg-white p-3 shadow-lg text-left ${className}`}
           >
             {content}
           </div>,

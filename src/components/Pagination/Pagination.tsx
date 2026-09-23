@@ -59,7 +59,7 @@ export default function Pagination({
           {Math.min(page * itemsPerPage, totalItems)} of {totalItems} items
         </div>
       )}
-      <div className="flex items-center gap-1.5">
+      <div className="flex flex-wrap items-center justify-center gap-1.5">
         <button
           onClick={() => onPageChange(Math.max(1, page - 1))}
           disabled={page === 1}

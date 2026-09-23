@@ -82,7 +82,7 @@ export default function DataTable<T>({
   const renderHeaderRow = () => (
     <tr>
       {columns.map((col, i) => {
-        const baseClass = `px-6 py-3 text-xs font-medium uppercase tracking-wider text-slate-700 ${alignClasses[col.align || "left"]} ${col.headerClassName || ""}`;
+        const baseClass = `px-3 py-3 text-xs sm:px-6 font-medium uppercase tracking-wider text-slate-700 ${alignClasses[col.align || "left"]} ${col.headerClassName || ""}`;
         const sortable = Boolean(col.sortKey && onSort);
         if (!sortable) {
           return (
@@ -117,7 +117,7 @@ export default function DataTable<T>({
             <tr>
               <td
                 colSpan={columns.length}
-                className="px-6 py-8 text-center text-slate-500"
+                className="px-3 py-8 text-center sm:px-6 text-slate-500"
               >
                 {emptyMessage}
               </td>
@@ -142,7 +142,7 @@ export default function DataTable<T>({
                 {columns.map((col, i) => (
                   <td
                     key={i}
-                    className={`px-6 py-4 ${alignClasses[col.align || "left"]} ${col.className || ""}`}
+                    className={`px-3 py-3 sm:px-6 sm:py-4 ${alignClasses[col.align || "left"]} ${col.className || ""}`}
                   >
                     {col.render(row)}
                   </td>

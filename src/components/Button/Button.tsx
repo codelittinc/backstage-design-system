@@ -1,9 +1,11 @@
-import { ButtonHTMLAttributes, ReactNode } from "react";
+import { ButtonHTMLAttributes, ReactNode, Ref } from "react";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   variant?: "primary" | "secondary" | "danger";
   size?: "sm" | "md" | "lg";
+  /** React 19 ref-as-prop, e.g. for a Popover's `triggerProps.ref`. */
+  ref?: Ref<HTMLButtonElement>;
 }
 
 const variantClasses = {

@@ -26,8 +26,8 @@ export interface CardProps {
 
 const paddingClasses = {
   sm: "p-4",
-  md: "p-6",
-  lg: "p-12",
+  md: "p-4 sm:p-6",
+  lg: "p-6 sm:p-12",
 };
 
 export default function Card({

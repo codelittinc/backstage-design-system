@@ -18,7 +18,7 @@ export interface ModalProps {
 const sizeClasses: Record<ModalSize, string> = {
   sm: "max-w-sm",
   md: "max-w-md",
-  lg: "max-w-lg max-h-[90vh] overflow-y-auto",
+  lg: "max-w-lg",
 };
 
 export default function Modal({
@@ -53,14 +53,14 @@ export default function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
       onClick={closeOnBackdropClick ? onClose : undefined}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className={`w-full ${sizeClasses[size]} rounded-2xl bg-white p-6 shadow-xl`}
+        className={`w-full ${sizeClasses[size]} max-h-full overflow-y-auto rounded-2xl bg-white p-4 shadow-xl sm:max-h-[90vh] sm:p-6`}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
@@ -73,7 +73,7 @@ export default function Modal({
         )}
         <div>{children}</div>
         {footer && (
-          <div className="mt-6 flex justify-end gap-3">{footer}</div>
+          <div className="mt-6 flex flex-wrap justify-end gap-3">{footer}</div>
         )}
       </div>
     </div>
