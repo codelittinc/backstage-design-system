@@ -11,7 +11,7 @@ export default function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <h2
-      className={`text-xl font-semibold text-slate-900 border-b border-slate-200 pb-3 ${className}`}
+      className={`mb-4 text-xl font-semibold text-slate-900 ${className}`}
     >
       {children}
     </h2>
