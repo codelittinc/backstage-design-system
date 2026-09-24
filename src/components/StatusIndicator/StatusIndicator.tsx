@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 export interface StatusIndicatorProps {
   status:
     | "currently_working"
@@ -46,7 +48,7 @@ export default function StatusIndicator({
   status,
   showLabel = false,
   size = "md",
-}: StatusIndicatorProps) {
+}: StatusIndicatorProps): ReactElement {
   const config = statusConfig[status];
 
   return (
@@ -60,7 +62,7 @@ export default function StatusIndicator({
   );
 }
 
-export function StatusLegend() {
+export function StatusLegend(): ReactElement {
   return (
     <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600">
       {Object.entries(statusConfig).map(([key, config]) => (

@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 export interface PaginationProps {
   page: number;
   totalPages: number;
@@ -14,7 +16,7 @@ export default function Pagination({
   totalItems,
   itemsPerPage = 10,
   showInfo = true,
-}: PaginationProps) {
+}: PaginationProps): ReactElement | null {
   if (totalPages <= 1) return null;
 
   const getPageNumbers = (): (number | string)[] => {

@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactElement } from "react";
+
 export interface CheckboxGroupOption {
   value: string;
   label: string;
@@ -24,7 +26,7 @@ export default function CheckboxGroup({
   orientation = "horizontal",
   disabled = false,
   className = "",
-}: CheckboxGroupProps) {
+}: CheckboxGroupProps): ReactElement {
   const toggle = (optionValue: string, checked: boolean) => {
     if (checked) {
       if (value.includes(optionValue)) return;

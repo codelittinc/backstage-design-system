@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactElement } from "react";
+
 export interface ErrorAlertProps {
   message: string;
   className?: string;
@@ -10,7 +12,7 @@ export default function ErrorAlert({
   message,
   className = "",
   onDismiss,
-}: ErrorAlertProps) {
+}: ErrorAlertProps): ReactElement {
   return (
     <div
       className={`rounded-xl border border-red-100 bg-red-50 p-4 text-red-700 ${className}`}

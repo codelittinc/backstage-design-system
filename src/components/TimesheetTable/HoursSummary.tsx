@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 interface HoursSummaryProps {
   loggedHours: number;
   expectedHours: number;
@@ -8,7 +10,7 @@ export default function HoursSummary({
   loggedHours,
   expectedHours,
   ptoHours,
-}: HoursSummaryProps) {
+}: HoursSummaryProps): ReactElement {
   const hasExpected = expectedHours > 0;
   const percentage = hasExpected
     ? Math.min((loggedHours / expectedHours) * 100, 100)

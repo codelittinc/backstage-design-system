@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import type { ViewMode } from "./types";
 
 interface ViewToggleProps {
@@ -5,7 +6,7 @@ interface ViewToggleProps {
   onChange: (mode: ViewMode) => void;
 }
 
-export default function ViewToggle({ viewMode, onChange }: ViewToggleProps) {
+export default function ViewToggle({ viewMode, onChange }: ViewToggleProps): ReactElement {
   return (
     <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5">
       {(["weekly", "monthly"] as const).map((mode) => (

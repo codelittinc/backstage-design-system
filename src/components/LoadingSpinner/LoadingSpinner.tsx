@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactElement } from "react";
+
 export interface LoadingSpinnerProps {
   message?: string;
   size?: "sm" | "md" | "lg";
@@ -10,7 +12,7 @@ export default function LoadingSpinner({
   message = "Loading...",
   size = "md",
   className = "",
-}: LoadingSpinnerProps) {
+}: LoadingSpinnerProps): ReactElement {
   const sizeClasses = {
     sm: "h-5 w-5 border-2",
     md: "h-8 w-8 border-[3px]",
