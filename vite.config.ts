@@ -25,6 +25,9 @@ function preserveUseClientDirective(): Plugin {
 
 export default defineConfig({
   plugins: [tailwindcss(), preserveUseClientDirective()],
+  // Set the JSX runtime here, not only in tsconfig: esbuild skips tsconfig for files under a
+  // node_modules path, which is where git installs build this package (e.g. pnpm's store in CI).
+  esbuild: { jsx: "automatic" },
   build: {
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
