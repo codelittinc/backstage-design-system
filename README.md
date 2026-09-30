@@ -16,7 +16,7 @@ Open [http://localhost:6006](http://localhost:6006) to browse components.
 | Category | Components |
 |----------|-----------|
 | **Components** | Button, Card, SectionHeader, Tag |
-| **Form** | FormInput, FormLabel, FormSelect, SearchableSelect |
+| **Form** | FormInput, FormLabel, FormSelect, SearchableSelect, SegmentedControl |
 | **Feedback** | Toast, ErrorAlert, LoadingSpinner, EmptyState, Tooltip |
 | **Data Display** | StatusIndicator, Pagination |
 | **Overlays** | Modal, Popover, Tooltip, CommandPalette |
